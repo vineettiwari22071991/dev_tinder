@@ -18,6 +18,19 @@ const validationSignUp = (req) => {
 
 }
 
+const validationLogin = (req) => {
+
+    const {emailId, password} = req.body;
+
+    if(!emailId || !password) {
+        throw new Error("All fields are required")
+    } else if(!validator.isEmail(emailId)) {
+        throw new Error("Invalid Email")
+    }
+
+}
+
 module.exports = {
-    validationSignUp
+    validationSignUp,
+    validationLogin
 }
