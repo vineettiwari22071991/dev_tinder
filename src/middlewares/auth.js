@@ -32,6 +32,21 @@ const userAuth = async (req, res, next) => {
 
 }
 
+const checkUserEmail = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email })
+        if (!user) {
+            throw new Error("User not found")
+        } else {
+            req.user = user;
+            next()
+        }
+    } catch(err){
+        res.status(400).send("ERROR " + err.message)
+    }
+}
+
 
 module.exports = {
     userAuth
