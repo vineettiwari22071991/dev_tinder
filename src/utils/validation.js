@@ -40,7 +40,7 @@ const validationEditProfileData = (req) => {
     }
 }
 
-const validatedPassword =  (req) => {
+const validatedPassword = (req) => {
     const { password, newPassword, confirmPassword } = req.body;
     if (!password || !newPassword || !confirmPassword) {
         throw new Error("All fields are required")
@@ -51,9 +51,32 @@ const validatedPassword =  (req) => {
     }
 }
 
+const validatedConnectionRequest = (loginUser, params) => {
+    const allowwedStatus = ['ignore', 'interested']
+    const fromUserId = loginUser._id;
+    const toUserId = params.toUserId;
+    const status =  params.status
+
+    if (!fromUserId || !toUserId) {
+        throw new Error("User Id are not provided")
+    }
+    
+    if (!status) {
+        throw new Error("Status is not provided")
+    }
+
+    const checkStatus = allowwedStatus.includes(status)
+    if (!checkStatus) {
+        throw new Error("Invalid status")
+    }
+
+    return { fromUserId, toUserId, status }
+}
+
 module.exports = {
     validationSignUp,
     validationLogin,
     validationEditProfileData,
-    validatedPassword
+    validatedPassword,
+    validatedConnectionRequest
 }
