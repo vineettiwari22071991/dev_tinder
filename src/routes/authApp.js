@@ -16,9 +16,16 @@ authRouter.post("/signup", async (req, res) => {
             password: passwordHash
         })
         await userObj.save()
-        res.send("User created successfully")
+        res.json({
+            statusCode: 200,
+            message: "User created successfully",
+            data: userObj
+        })
     } catch (err) {
-        res.status(400).send("Error while creating a record: " + err.message)
+        res.status(400).json({
+            statusCode: 400,
+            message: "Error: " + err.message
+        })
     }
 })
 
@@ -38,12 +45,19 @@ authRouter.post("/login", async (req, res) => {
                 res.cookie("token", token, {
                     expires : new Date(Date.now() + 8 * 360000) 
                 })
-                res.send("Login Successfully")
+                res.json({
+                    statusCode: 200,
+                    message: "Login Successfully",
+                    data: user
+                })
             }
         }
 
     } catch (err) {
-        res.status(400).send("Error while login: " + err.message)
+        res.status(400).json({
+            statusCode: 400,
+            message: "Error: " + err.message
+        })
     }
 })
 
@@ -52,9 +66,16 @@ authRouter.get("/logout", async (req, res) => {
         res.cookie("token", null, {
             expires: new Date(Date.now())
         })
-        res.send("Logout Successfully")
+        res.json({
+            statusCode: 200,
+            message: "Logout Successfully",
+            data: null
+        })
     } catch (err) {
-        res.status(400).send("Error while logout: " + err.message)
+        res.status(400).json({
+            statusCode: 400,
+            message: "Error: " + err.message
+        })
     }
 })
 

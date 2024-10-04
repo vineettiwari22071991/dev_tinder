@@ -7,9 +7,16 @@ const User = require("../models/user");
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
     try {
-        res.send(req.user)
+        res.json({
+            statusCode: 200,
+            message: "Profile fetched successfully",
+            data: req.user
+        })
     } catch (err) {
-        res.status(400).send("ERROR " + err.message)
+        res.status(400).json({
+            statusCode: 400,
+            message: "Error: " + err.message
+        })
     }
 });
 
@@ -23,28 +30,40 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
         }
         updates.forEach((field) => user[field] = req.body[field])
         await req.user.save()
-        res.json({ message: "Profile updated successfully" ,
-        data: req.user
-     })
+        res.json({
+            statusCode: 200,
+            message: "Profile updated successfully",
+            data: req.user
+        })
 
     } catch (err) {
-        res.status(400).send("ERROR " + err.message)
+        res.status(400).json({
+            statusCode: 400,
+            message: "Error: " + err.message
+        })
     }
 
 })
 
 profileRouter.patch("/profile/forgotPassword", async (req, res) => {
-    try{
-        const  user = await User.findOne({emailId: req.body.emailId})
-        if(!user) throw new Error("User not found")
+    try {
+        const user = await User.findOne({ emailId: req.body.emailId })
+        if (!user) throw new Error("User not found")
         validatedPassword(req)
         const passwordHash = await passwordHashing(req.body.newPassword)
         user.password = passwordHash
         await user.save()
-        res.send("Password updated successfully")
+        res.json({
+            statusCode: 200,
+            message: "Password updated successfully",
+            data: req.user
+        })
 
-    }catch(err){
-        res.status(400).send("ERROR: " + err.message)
+    } catch (err) {
+        res.status(400).json({
+            statusCode: 400,
+            message: "Error: " + err.message
+        })
     }
 })
 
